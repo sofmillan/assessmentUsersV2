@@ -35,7 +35,7 @@ public class ErrorResponseBuilder {
     }
 
     private Mono<ErrorModel> buildErrorResponse(ErrorMetadata errorMetadata, ErrorContext context){
-        List<String> details = List.of("");
+        List<String> details;
         if(context.throwable() instanceof ObjectValidationException ex){
             details = ex.getDetails();
         }else{

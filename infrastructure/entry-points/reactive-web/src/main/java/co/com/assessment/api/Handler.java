@@ -14,8 +14,6 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class Handler {
-//private  final UseCase useCase;
-//private  final UseCase2 useCase2;
     private final UserSignupUseCase userSignupUseCase;
     private final ObjectValidator objectValidator;
 
@@ -25,7 +23,7 @@ public class Handler {
         return serverRequest.bodyToMono(UserSignupRqDto.class)
                 .switchIfEmpty(Mono.error(()-> new BusinessException(BusinessErrorMessage.EMAIL_ALREADY_REGISTERED)))
                 .doOnNext(objectValidator::validate)
-                .flatMap(s-> ServerResponse.ok().bodyValue(""));
+                .flatMap(this::buildResponse);
     /*    return serverRequest.bodyToMono(UserSignupRqDto.class)
                 .switchIfEmpty(Mono.error(()-> new RuntimeException("Invalid request")))
                 .flatMap(requestDto -> userSignupUseCase.registerUser())
@@ -42,7 +40,7 @@ public class Handler {
         return ServerResponse.ok().bodyValue("");
     }
 
-    private Mono<ServerResponse> buildResponse(ServerRequest serverRequest, UserSignupRqDto userSignupRqDto){
+    private Mono<ServerResponse> buildResponse(UserSignupRqDto userSignupRqDto){
         return ServerResponse.ok().bodyValue(userSignupRqDto);
     }
 }

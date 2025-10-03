@@ -22,3 +22,11 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+aws:
+  dynamodb:
+    endpoint: "http://localhost:8000"
+adapter:
+  cognito:
+    secret: "<cognito-credentials-secret-name>"
+    timeout: 5000
+    endpoint: "https://<domain>.auth.<region>.amazoncognito.com/oauth2/token"

@@ -1,5 +1,10 @@
 package co.com.assessment.api;
 
+import co.com.assessment.api.dto.request.UserSignupRqDto;
+import co.com.assessment.api.validation.ObjectValidator;
+import co.com.assessment.model.exception.BusinessErrorMessage;
+import co.com.assessment.model.exception.BusinessException;
+import co.com.assessment.usecase.UserSignupUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -11,13 +16,23 @@ import reactor.core.publisher.Mono;
 public class Handler {
 //private  final UseCase useCase;
 //private  final UseCase2 useCase2;
+    private final UserSignupUseCase userSignupUseCase;
+    private final ObjectValidator objectValidator;
 
-    public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
-        // useCase.logic();
-        return ServerResponse.ok().bodyValue("");
+    public Mono<ServerResponse> listenPOSTUserSignup(ServerRequest serverRequest) {
+       // return ServerResponse.ok().bodyValue("");
+
+        return serverRequest.bodyToMono(UserSignupRqDto.class)
+                .switchIfEmpty(Mono.error(()-> new BusinessException(BusinessErrorMessage.EMAIL_ALREADY_REGISTERED)))
+                .doOnNext(objectValidator::validate)
+                .flatMap(s-> ServerResponse.ok().bodyValue(""));
+    /*    return serverRequest.bodyToMono(UserSignupRqDto.class)
+                .switchIfEmpty(Mono.error(()-> new RuntimeException("Invalid request")))
+                .flatMap(requestDto -> userSignupUseCase.registerUser())
+                .flatMap(requestDto -> buildResponse(serverRequest, requestDto));*/
     }
 
-    public Mono<ServerResponse> listenGETOtherUseCase(ServerRequest serverRequest) {
+    public Mono<ServerResponse> listenPOSTUserSignin(ServerRequest serverRequest) {
         // useCase2.logic();
         return ServerResponse.ok().bodyValue("");
     }
@@ -25,5 +40,9 @@ public class Handler {
     public Mono<ServerResponse> listenPOSTUseCase(ServerRequest serverRequest) {
         // useCase.logic();
         return ServerResponse.ok().bodyValue("");
+    }
+
+    private Mono<ServerResponse> buildResponse(ServerRequest serverRequest, UserSignupRqDto userSignupRqDto){
+        return ServerResponse.ok().bodyValue(userSignupRqDto);
     }
 }

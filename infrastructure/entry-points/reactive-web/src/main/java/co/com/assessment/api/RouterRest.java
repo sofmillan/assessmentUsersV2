@@ -2,10 +2,13 @@ package co.com.assessment.api;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.MethodNotAllowedException;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import java.util.List;
+
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -13,8 +16,10 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class RouterRest {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(GET("/api/usecase/path"), handler::listenGETUseCase)
-                .andRoute(POST("/api/usecase/otherpath"), handler::listenPOSTUseCase)
-                .and(route(GET("/api/otherusercase/path"), handler::listenGETOtherUseCase));
+        return route(POST("/user/signup"), handler::listenPOSTUserSignup)
+                .andRoute(POST("/user/signin"), handler::listenPOSTUserSignin)
+                .andRoute(RequestPredicates.all(), request ->{
+                    throw new MethodNotAllowedException(request.method(), List.of());
+                });
     }
 }

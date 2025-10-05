@@ -94,24 +94,23 @@ jacoco {
 }
 
 tasks.register('jacocoMergedReport', JacocoReport) {
-    // CRITICAL: Ensure all subproject tests run to generate .exec files
-    dependsOn = [subprojects.test, pitestReportAggregate]
+    // Explicitly depend on all subprojects' test and pitest tasks
+    dependsOn test
+    dependsOn subprojects.collect { it.tasks.matching { t -> t.name in ['test', 'jacocoTestReport', 'pitest'] } }.flatten()
 
-    // Configure sources and classes from all subprojects
     additionalSourceDirs.setFrom files(subprojects.collect { it.sourceSets.main.allSource.srcDirs })
     sourceDirectories.setFrom files(subprojects.collect { it.sourceSets.main.allSource.srcDirs })
     classDirectories.setFrom files(subprojects.collect { it.sourceSets.main.output })
-
-    // Collect execution data from all subprojects' build/jacoco directories
-    executionData.setFrom fileTree(dir: '.', include: '**/build/jacoco/test.exec')
+    executionData.setFrom fileTree(dir: rootProject.projectDir, include: '**/build/jacoco/test.exec')
 
     reports {
-        xml.setRequired true
-        csv.setRequired false
-        html.setRequired true
-        // XML output will go to the configured path: build/reports/jacocoMergedReport/jacocoMergedReport.xml
+        xml.required.set(true)
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacocoMergedReport/jacocoMergedReport.xml"))
+        html.required.set(true)
     }
 }
+
+
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs = [

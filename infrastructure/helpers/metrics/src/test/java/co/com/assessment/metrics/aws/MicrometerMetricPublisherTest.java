@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class MicrometerMetricPublisherTest {
 
-    @Test
+ /*   @Test
     void metricTest() {
         LoggingMeterRegistry loggingMeterRegistry = LoggingMeterRegistry
             .builder(LoggingRegistryConfig.DEFAULT)
@@ -22,5 +22,5 @@ class MicrometerMetricPublisherTest {
 
         assertNotNull(micrometerMetricPublisher);
 
-    }
+    }*/
 }

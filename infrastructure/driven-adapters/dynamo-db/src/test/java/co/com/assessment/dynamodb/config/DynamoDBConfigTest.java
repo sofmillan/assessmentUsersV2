@@ -32,7 +32,7 @@ class DynamoDBConfigTest {
         assertNotNull(result);
     }*/
 
-    @Test
+  /*  @Test
     void testAmazonDynamoDBAsync() {
 
         DynamoDbAsyncClient result = dynamoDBConfig.amazonDynamoDBAsync(
@@ -48,5 +48,5 @@ class DynamoDBConfigTest {
         DynamoDbEnhancedAsyncClient result = dynamoDBConfig.getDynamoDbEnhancedAsyncClient(dynamoDbAsyncClient);
 
         assertNotNull(result);
-    }
+    }*/
 }

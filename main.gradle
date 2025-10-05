@@ -95,7 +95,7 @@ jacoco {
 
 tasks.register('jacocoMergedReport', JacocoReport) {
     // Explicitly depend on all subprojects' test and pitest tasks
-    dependsOn test
+    //dependsOn test
     dependsOn subprojects.collect { it.tasks.matching { t -> t.name in ['test', 'jacocoTestReport', 'pitest'] } }.flatten()
 
     additionalSourceDirs.setFrom files(subprojects.collect { it.sourceSets.main.allSource.srcDirs })
@@ -105,7 +105,7 @@ tasks.register('jacocoMergedReport', JacocoReport) {
 
     reports {
         xml.required.set(true)
-        xml.outputLocation.set(layout.buildDirectory.file("reports/jacocoMergedReport/jacocoTestReport.xml"))
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacocoMergedReport/jacocoMergedReport.xml"))
         html.required.set(true)
     }
 }

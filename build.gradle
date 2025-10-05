@@ -19,19 +19,26 @@ plugins {
 
 sonar {
     def modules = subprojects.projectDir.collect { "${it.toString().replace(project.projectDir.toString() + "/", "")}" }
+
+    // Define explicit, comma-separated lists of all directories from all subprojects
+    def allSources = subprojects.collect { it.file('src/main/java') }.join(',')
+    def allBinaries = subprojects.collect { it.file('build/classes/java/main') }.join(',')
+    def allTests = subprojects.collect { it.file('src/test/java') }.join(',')
+
     properties {
         property "sonar.sourceEncoding", "UTF-8"
         property "sonar.modules", "${modules.join(',')}"
-        // Added the JaCoCo aggregated report path
+
+        // CRITICAL FIX: Explicitly set sources, binaries, and tests for reliable path matching
+        property "sonar.sources", allSources
+        property "sonar.tests", allTests
+        property "sonar.java.binaries", allBinaries
+
+        // Report paths remain correct as they point to the aggregated report
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacocoMergedReport/jacocoMergedReport.xml"
-        // Pitest aggregated report path (already correct)
         property "sonar.pitest.reportPaths", "build/reports/pitest/mutations.xml"
 
-        property "sonar.sources", "src,deployment,settings.gradle,main.gradle,build.gradle,${modules.collect { "${it}/build.gradle" }.join(',')}"
         property "sonar.exclusions","**/MainApplication.java"
-        property "sonar.tests", "src/test"
-        // Correctly pointing to classes across all modules
-        property "sonar.java.binaries", "**/build/classes/java/main"
         property "sonar.junit.reportsPath", "**/build/test-results/test"
         property "sonar.java.coveragePlugin", "jacoco"
 
@@ -45,7 +52,7 @@ sonar {
 // REMOVED: jacocoTestReport block, as this task only exists in subprojects.
 
 tasks.named('sonar').configure {
-    // CRITICAL FIX: The root sonar task MUST depend on the merged report task
+    // Dependency on the merged report is correct
     dependsOn jacocoMergedReport
 }
 

@@ -13,7 +13,6 @@ public class UserSignupUseCase {
     private final PersistencePort persistencePort;
     private final TokenProvider tokenProvider;
     public Mono<User> registerUser(Mono<User> user){
-        System.out.println("REGISTER USER USE CASE");
        return user
                .flatMap(user1 -> tokenProvider.registerUser(user1)
                    .map(id -> {

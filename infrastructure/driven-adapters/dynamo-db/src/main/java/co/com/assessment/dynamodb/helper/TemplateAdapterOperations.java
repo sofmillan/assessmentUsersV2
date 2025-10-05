@@ -39,7 +39,6 @@ public abstract class TemplateAdapterOperations<E, K, V> {
     }
 
     public Mono<E> save(E model) {
-        System.out.println("SAVE");
         return Mono.fromFuture(table.putItem(toEntity(model))).thenReturn(model);
     }
 

@@ -12,7 +12,6 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderAsyncClient;
-import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
 import javax.crypto.Mac;
@@ -46,14 +45,33 @@ public class CognitoService implements TokenProvider {
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
     }
+
     @Override
-    public Mono<String> getToken() {
-        return null;
+    public Mono<AuthenticatedUser> loginUser(User user) {
+        String secretHash = calculateSecretHash(clientId, clientSecret, user.getEmail());
+
+        InitiateAuthRequest authRequest = InitiateAuthRequest.builder()
+                .authFlow(AuthFlowType.USER_PASSWORD_AUTH)
+                .clientId(clientId)
+                .authParameters(Map.of(
+                        "USERNAME", user.getEmail(),
+                        "PASSWORD", user.getPassword(),
+                        "SECRET_HASH", secretHash
+                ))
+                .build();
+
+        return Mono.fromFuture(cognitoClient.initiateAuth(authRequest))
+                .map(authResponse ->{
+                    AuthenticationResultType result = authResponse.authenticationResult();
+                    return   new AuthenticatedUser(result.accessToken(),
+                            result.refreshToken(),
+                            result.expiresIn(),
+                            result.tokenType());
+                });
     }
 
     @Override
     public Mono<String> registerUser(User user) {
-        System.out.println("REGISTER USER COGNITO SERVICE");
         String secretHash = calculateSecretHash(clientId, clientSecret, user.getEmail());
 
         AdminCreateUserRequest signUpRequest = AdminCreateUserRequest.builder()
@@ -79,19 +97,7 @@ public class CognitoService implements TokenProvider {
 
     }
 
-    private Throwable handleCognitoExceptions(Throwable e) {
-        if (e instanceof UsernameExistsException) {
-            return new BusinessException(BusinessErrorMessage.EMAIL_ALREADY_REGISTERED);
-        }else if(e instanceof UserNotFoundException ){
-            return new BusinessException(BusinessErrorMessage.INVALID_CREDENTIALS);
-        }else if(e instanceof NotAuthorizedException){
-            return new BusinessException(BusinessErrorMessage.INVALID_CREDENTIALS);
-        }
-        return e;
-    }
-
     private Mono<Void> setPass(String email, String pass){
-        System.out.println("SET PASS COGNITO SERVICE");
         AdminSetUserPasswordRequest setPasswordRequest = AdminSetUserPasswordRequest.builder()
                 .userPoolId(userPoolId)
                 .username(email)
@@ -103,7 +109,6 @@ public class CognitoService implements TokenProvider {
     }
 
     private Mono<Void> addtogroup(String email, String role){
-        System.out.println("ADD GROUP");
         AdminAddUserToGroupRequest addUserToGroupRequest = AdminAddUserToGroupRequest.builder()
                 .userPoolId(userPoolId)
                 .username(email)
@@ -113,32 +118,17 @@ public class CognitoService implements TokenProvider {
         return Mono.fromFuture(cognitoClient.adminAddUserToGroup(addUserToGroupRequest)).then();
     }
 
-    @Override
-    public Mono<AuthenticatedUser> loginUser(User user) {
 
-            String secretHash = calculateSecretHash(clientId, clientSecret, user.getEmail());
-
-            InitiateAuthRequest authRequest = InitiateAuthRequest.builder()
-                    .authFlow(AuthFlowType.USER_PASSWORD_AUTH)
-                    .clientId(clientId)
-                    .authParameters(Map.of(
-                            "USERNAME", user.getEmail(),
-                            "PASSWORD", user.getPassword(),
-                            "SECRET_HASH", secretHash
-                    ))
-                    .build();
-
-        return Mono.fromFuture(cognitoClient.initiateAuth(authRequest))
-                .map(authResponse ->{
-                    AuthenticationResultType result = authResponse.authenticationResult();
-                    return   new AuthenticatedUser(result.accessToken(),
-                            result.refreshToken(),
-                            result.expiresIn(),
-                            result.tokenType());
-                });
+    private Throwable handleCognitoExceptions(Throwable e) {
+        if (e instanceof UsernameExistsException) {
+            return new BusinessException(BusinessErrorMessage.EMAIL_ALREADY_REGISTERED);
+        }else if(e instanceof UserNotFoundException ){
+            return new BusinessException(BusinessErrorMessage.INVALID_CREDENTIALS);
+        }else if(e instanceof NotAuthorizedException){
+            return new BusinessException(BusinessErrorMessage.INVALID_CREDENTIALS);
+        }
+        return e;
     }
-
-
     public static String calculateSecretHash(String clientId, String clientSecret, String username) {
         try {
             String message = username + clientId;

@@ -1,6 +1,6 @@
 package co.com.assessment.cognito.config;
 
-import co.com.assessment.cognito.CognitoTokenProvider;
+
 import co.com.assessment.cognito.model.CognitoCredentials;
 import co.com.assessment.model.gateway.TokenProvider;
 import co.com.bancolombia.secretsmanager.api.GenericManagerAsync;

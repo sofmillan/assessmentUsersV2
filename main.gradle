@@ -28,7 +28,7 @@ subprojects {
     }
 
     dependencies {
-		implementation platform('software.amazon.awssdk:bom:2.33.1')
+        implementation platform('software.amazon.awssdk:bom:2.33.1')
         implementation 'io.projectreactor:reactor-core'
         implementation 'io.projectreactor.addons:reactor-extra'
 
@@ -52,7 +52,8 @@ subprojects {
         }
     }
 
-    test.finalizedBy(project.tasks.jacocoTestReport)
+    // Ensure JaCoCo and Pitest reports run after tests in each subproject
+    test.finalizedBy(project.tasks.jacocoTestReport, project.tasks.pitest)
 
     pitest {
         targetClasses = ['co.com.assessment.*']
@@ -73,19 +74,18 @@ subprojects {
     }
 
     jacocoTestReport {
-        dependsOn test, 'pitest'
+        // We only need the test task to run to generate the .exec file
+        dependsOn test
         reports {
             xml.setRequired true
+            // Outputting to build/jacoco/test.xml for individual module reports (optional for sonar)
             xml.setOutputLocation layout.buildDirectory.file("reports/jacoco.xml")
             csv.setRequired false
             html.setOutputLocation layout.buildDirectory.dir("reports/jacocoHtml")
         }
     }
 
-    tasks.named('sonar').configure {
-        dependsOn jacocoTestReport
-    }
-
+    // Removed the 'sonar' dependency here as it's better placed in the root build.gradle
 }
 
 jacoco {
@@ -94,15 +94,22 @@ jacoco {
 }
 
 tasks.register('jacocoMergedReport', JacocoReport) {
-    dependsOn = [test, subprojects.jacocoTestReport, pitestReportAggregate]
-    additionalSourceDirs.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
-    sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
-    classDirectories.setFrom files(subprojects.sourceSets.main.output)
-    executionData.setFrom project.fileTree(dir: '.', include: '**/build/jacoco/test.exec')
+    // CRITICAL: Ensure all subproject tests run to generate .exec files
+    dependsOn = [subprojects.test, pitestReportAggregate]
+
+    // Configure sources and classes from all subprojects
+    additionalSourceDirs.setFrom files(subprojects.collect { it.sourceSets.main.allSource.srcDirs })
+    sourceDirectories.setFrom files(subprojects.collect { it.sourceSets.main.allSource.srcDirs })
+    classDirectories.setFrom files(subprojects.collect { it.sourceSets.main.output })
+
+    // Collect execution data from all subprojects' build/jacoco directories
+    executionData.setFrom fileTree(dir: '.', include: '**/build/jacoco/test.exec')
+
     reports {
         xml.setRequired true
         csv.setRequired false
         html.setRequired true
+        // XML output will go to the configured path: build/reports/jacocoMergedReport/jacocoMergedReport.xml
     }
 }
 

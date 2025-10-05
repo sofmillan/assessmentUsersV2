@@ -16,7 +16,7 @@ import reactor.test.StepVerifier;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CognitoTokenProviderTest {
+class CognitoIdentityProviderTest {
   /*  @Mock
     private GenericManagerAsync manager;
     private MockWebServer server;

@@ -1,22 +1,7 @@
 package co.com.assessment.cognito.config;
 
 
-import co.com.assessment.cognito.model.CognitoCredentials;
-import co.com.assessment.model.gateway.TokenProvider;
-import co.com.bancolombia.secretsmanager.api.GenericManagerAsync;
-import co.com.bancolombia.secretsmanager.api.exceptions.SecretException;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.handler.timeout.WriteTimeoutHandler;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.client.reactive.ClientHttpConnector;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-import reactor.netty.http.client.HttpClient;
-
 
 
 @Configuration

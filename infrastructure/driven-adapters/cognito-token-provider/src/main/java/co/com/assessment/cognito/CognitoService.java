@@ -4,7 +4,7 @@ import co.com.assessment.model.AuthenticatedUser;
 import co.com.assessment.model.User;
 import co.com.assessment.model.exception.BusinessErrorMessage;
 import co.com.assessment.model.exception.BusinessException;
-import co.com.assessment.model.gateway.TokenProvider;
+import co.com.assessment.model.gateway.IdentityProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -20,7 +20,7 @@ import java.util.Base64;
 import java.util.Map;
 
 @Service
-public class CognitoService implements TokenProvider {
+public class CognitoService implements IdentityProvider {
     private final CognitoIdentityProviderAsyncClient cognitoClient;
     private final String userPoolId;
     private final String clientId;

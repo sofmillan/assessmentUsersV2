@@ -8,7 +8,7 @@ import co.com.assessment.api.validation.ObjectValidator;
 import co.com.assessment.model.User;
 import co.com.assessment.model.exception.BusinessErrorMessage;
 import co.com.assessment.model.exception.BusinessException;
-import co.com.assessment.usecase.UserSignupUseCase;
+import co.com.assessment.usecase.UserUseCase;
 import org.reactivecommons.utils.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class Handler {
-    private final UserSignupUseCase userSignupUseCase;
+    private final UserUseCase userUseCase;
     private final ObjectValidator objectValidator;
     private final ObjectMapper objectMapper;
 
@@ -28,7 +28,7 @@ public class Handler {
                 .switchIfEmpty(Mono.error(()-> new BusinessException(BusinessErrorMessage.INVALID_REQUEST)))
                 .doOnNext(objectValidator::validate)
                 .map(dto -> objectMapper.map(dto, User.class))
-                .flatMap(model-> userSignupUseCase.registerUser(Mono.just(model)))
+                .flatMap(model-> userUseCase.registerUser(Mono.just(model)))
                 .map(user -> objectMapper.map(user, UserSignupRsDto.class))
                 .flatMap(this::buildResponse);
     }
@@ -38,7 +38,7 @@ public class Handler {
                 .switchIfEmpty(Mono.error(()-> new BusinessException(BusinessErrorMessage.INVALID_REQUEST)))
                 .doOnNext(objectValidator::validate)
                 .map(dto -> objectMapper.map(dto, User.class))
-                .flatMap(model -> userSignupUseCase.login(Mono.just(model)))
+                .flatMap(model -> userUseCase.login(Mono.just(model)))
                 .map(model -> objectMapper.map(model, UserSigninRsDto.class))
                 .flatMap(this::buildResponse);
 

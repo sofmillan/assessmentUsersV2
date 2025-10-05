@@ -1,5 +1,6 @@
 package co.com.assessment.api;
 
+import co.com.assessment.api.dto.request.UserSigninRsDto;
 import co.com.assessment.api.dto.request.UserSignupRqDto;
 import co.com.assessment.api.dto.response.UserSignupRsDto;
 import co.com.assessment.api.validation.ObjectValidator;
@@ -39,7 +40,12 @@ public class Handler {
 
     public Mono<ServerResponse> listenPOSTUserSignin(ServerRequest serverRequest) {
         // useCase2.logic();
-        return ServerResponse.ok().bodyValue("");
+        return serverRequest.bodyToMono(UserSigninRsDto.class)
+                .doOnNext(objectValidator::validate)
+                .map(dto -> objectMapper.map(dto, User.class))
+                .flatMap(model -> userSignupUseCase.login(Mono.just(model)))
+                .flatMap(this::buildResponse);
+
     }
 
     public Mono<ServerResponse> listenPOSTUseCase(ServerRequest serverRequest) {
@@ -47,7 +53,7 @@ public class Handler {
         return ServerResponse.ok().bodyValue("");
     }
 
-    private Mono<ServerResponse> buildResponse(UserSignupRsDto userSignupRqDto){
+    private Mono<ServerResponse> buildResponse(Object userSignupRqDto){
         return ServerResponse.ok().bodyValue(userSignupRqDto);
     }
 }

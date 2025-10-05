@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.time.Duration;
 
 @Log4j2
-public class CognitoTokenProvider implements TokenProvider {
+public class CognitoTokenProvider {
     public static final int COGNITO_RETRIES = 3;
     private final Mono<String> cachedToken;
 
@@ -36,12 +36,12 @@ public class CognitoTokenProvider implements TokenProvider {
                 .map(CognitoTokenResponse::getAccessToken);
         }
 
-    @Override
+
     public Mono<String> getToken() {
         return cachedToken;
     }
 
-    @Override
+
     public Mono<AuthenticatedUser> loginUser(Mono<User> user) {
         return null;
     }

@@ -1,9 +1,9 @@
-package co.com.assessment.api.dto.response;
+package co.com.assessment.model;
 
 import lombok.Data;
 
 @Data
-public class UserSignupRsDto {
+public class UserResponse {
     private String firstName;
     private String lastName;
     private String email;

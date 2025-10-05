@@ -2,6 +2,8 @@ package co.com.assessment.cognito;
 
 import co.com.assessment.cognito.model.CognitoCredentials;
 import co.com.assessment.cognito.model.CognitoTokenResponse;
+import co.com.assessment.model.AuthenticatedUser;
+import co.com.assessment.model.User;
 import co.com.assessment.model.gateway.TokenProvider;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatusCode;
@@ -37,6 +39,11 @@ public class CognitoTokenProvider implements TokenProvider {
     @Override
     public Mono<String> getToken() {
         return cachedToken;
+    }
+
+    @Override
+    public Mono<AuthenticatedUser> loginUser(Mono<User> user) {
+        return null;
     }
 
     private Duration cacheTime(CognitoTokenResponse token) {

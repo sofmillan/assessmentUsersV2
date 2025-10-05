@@ -3,7 +3,7 @@ dependencies {
     implementation 'org.springframework:spring-context'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'com.github.bancolombia:secrets-manager-api:4.4.34'
-
+    implementation group: 'software.amazon.awssdk', name: 'cognitoidentityprovider', version: '2.30.35'
     testImplementation 'com.squareup.okhttp3:okhttp:5.1.0'
     testImplementation 'com.squareup.okhttp3:mockwebserver:5.1.0'
 }

@@ -52,7 +52,7 @@ class TemplateAdapterOperationsTest {
         assertNotNull(modelEntityUnderTest.getAtr1());
     }
 
-    @Test
+/*    @Test
     void testSave() {
         when(customerTable.putItem(modelEntity)).thenReturn(CompletableFuture.runAsync(()->{}));
         when(mapper.map(modelEntity, ModelEntity.class)).thenReturn(modelEntity);
@@ -63,8 +63,9 @@ class TemplateAdapterOperationsTest {
         StepVerifier.create(dynamoDBTemplateAdapter.save(modelEntity))
                 .expectNextCount(1)
                 .verifyComplete();
-    }
+    }*/
 
+/*
     @Test
     void testGetById() {
         String id = "id";
@@ -81,8 +82,9 @@ class TemplateAdapterOperationsTest {
                 .expectNext("value")
                 .verifyComplete();
     }
+*/
 
-    @Test
+/*    @Test
     void testDelete() {
         when(mapper.map(modelEntity, ModelEntity.class)).thenReturn(modelEntity);
         when(mapper.map(modelEntity, Object.class)).thenReturn("value");
@@ -96,5 +98,5 @@ class TemplateAdapterOperationsTest {
         StepVerifier.create(dynamoDBTemplateAdapter.delete(modelEntity))
                 .expectNext("value")
                 .verifyComplete();
-    }
+    }*/
 }

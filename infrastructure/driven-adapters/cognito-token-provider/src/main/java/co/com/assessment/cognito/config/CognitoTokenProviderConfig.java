@@ -17,12 +17,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
-import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 
 @Configuration
 public class CognitoTokenProviderConfig {
-    @Bean
+/*    @Bean
     public TokenProvider cognitoTokenProvider(@Value("${adapter.cognito.endpoint}") String endpoint,
                                               @Value("${adapter.cognito.timeout}") int timeout,
                                               WebClient.Builder builder, Mono<CognitoCredentials> provider) {
@@ -45,9 +44,9 @@ public class CognitoTokenProviderConfig {
     }
 
     private ClientHttpConnector getClientHttpConnector(int timeout) {
-        /*
+        *//*
         IF YO REQUIRE APPEND SSL CERTIFICATE SELF SIGNED: this should be in the default cacerts trustore
-        */
+        *//*
         return new ReactorClientHttpConnector(HttpClient.create()
                 .compress(true)
                 .keepAlive(true)
@@ -56,6 +55,6 @@ public class CognitoTokenProviderConfig {
                     connection.addHandlerLast(new ReadTimeoutHandler(timeout, MILLISECONDS));
                     connection.addHandlerLast(new WriteTimeoutHandler(timeout, MILLISECONDS));
                 }));
-    }
+    }*/
 
 }

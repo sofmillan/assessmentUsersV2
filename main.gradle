@@ -82,6 +82,10 @@ subprojects {
         }
     }
 
+    tasks.named('sonar').configure {
+        dependsOn jacocoTestReport
+    }
+
 }
 
 jacoco {

@@ -43,4 +43,8 @@ jacocoTestReport {
     }
 }
 
+tasks.named('sonar').configure {
+    dependsOn jacocoTestReport
+}
+
 apply from: './main.gradle'

@@ -1,5 +1,6 @@
 package co.com.assessment.dynamodb.config;
 
+/*
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -9,17 +10,18 @@ import software.amazon.awssdk.metrics.MetricPublisher;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+*/
 
-@ExtendWith(MockitoExtension.class)
+/*@ExtendWith(MockitoExtension.class)*/
 class DynamoDBConfigTest {
 
-    @Mock
+/*    @Mock
     private MetricPublisher publisher;
 
     @Mock
     private DynamoDbAsyncClient dynamoDbAsyncClient;
 
-    private final DynamoDBConfig dynamoDBConfig = new DynamoDBConfig();
+    private final DynamoDBConfig dynamoDBConfig = new DynamoDBConfig();*/
 
 /*    @Test
     void testAmazonDynamoDB() {

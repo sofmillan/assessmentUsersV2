@@ -1,5 +1,6 @@
 package co.com.assessment.dynamodb.helper;
 
+/*
 import co.com.assessment.dynamodb.DynamoDBTemplateAdapter;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
+*/
 
 class TemplateAdapterOperationsTest {
 /*

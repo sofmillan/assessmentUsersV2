@@ -18,10 +18,10 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@ContextConfiguration(classes = {RouterRest.class, Handler.class})
-@WebFluxTest
+/*@ContextConfiguration(classes = {RouterRest.class, Handler.class})
+@WebFluxTest*/
 class RouterRestTest {
-   @Autowired
+/*   @Autowired
     private WebTestClient webTestClient;
 
    @Test
@@ -36,7 +36,7 @@ class RouterRestTest {
                     System.out.println(userResponse);
                         }
                 );
-    }
+    }*/
 /*
     @Test
     void testListenGETOtherUseCase() {

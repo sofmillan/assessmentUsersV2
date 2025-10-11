@@ -9,27 +9,36 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;*/
 
 
-/*@ContextConfiguration(classes = {RouterRest.class, Handler.class})*/
-/*@WebFluxTest*/
+import co.com.assessment.api.dto.response.UserSignupRsDto;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.reactive.server.WebTestClient;
+
+@ContextConfiguration(classes = {RouterRest.class, Handler.class})
+@WebFluxTest
 class RouterRestTest {
 
-/*    @Autowired
+   @Autowired
     private WebTestClient webTestClient;
 
     @Test
     void testListenGETUseCase() {
-        webTestClient.get()
-                .uri("/api/usecase/path")
-                .accept(MediaType.APPLICATION_JSON)
+        webTestClient.post()
+                .uri("/user/signup")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class)
+                .expectBody(UserSignupRsDto.class)
                 .value(userResponse -> {
-                            Assertions.assertThat(userResponse).isEmpty();
+                          //  Assertions.assertThat(userResponse).isEmpty();
+                    System.out.println(userResponse);
                         }
                 );
     }
-
+/*
     @Test
     void testListenGETOtherUseCase() {
         webTestClient.get()

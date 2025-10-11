@@ -2,16 +2,10 @@ package co.com.assessment.dynamodb.helper;
 
 import org.reactivecommons.utils.ObjectMapper;
 import reactor.core.publisher.Mono;
-import software.amazon.awssdk.core.async.SdkPublisher;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbAsyncIndex;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbAsyncTable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedAsyncClient;
-import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.enhanced.dynamodb.model.Page;
-import software.amazon.awssdk.enhanced.dynamodb.model.PagePublisher;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -41,14 +35,6 @@ public abstract class TemplateAdapterOperations<E, K, V> {
     public Mono<E> save(E model) {
         return Mono.fromFuture(table.putItem(toEntity(model))).thenReturn(model);
     }
-
-    public Mono<E> getById(K id) {
-        return Mono.fromFuture(table.getItem(Key.builder()
-                        .partitionValue(AttributeValue.builder().s((String) id).build())
-                        .build()))
-                .map(this::toModel);
-    }
-
     protected V toEntity(E model) {
         return mapper.map(model, dataClass);
     }

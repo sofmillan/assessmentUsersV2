@@ -1,6 +1,7 @@
 package co.com.assessment.dynamodb;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamoDbBean
+@Builder(toBuilder=true)
 public class UserEntity {
 
     private String id;

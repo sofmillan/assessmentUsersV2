@@ -7,7 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum BusinessErrorMessage {
     INVALID_REQUEST(400, "Bad Request", "Body cannot be empty"),
-    INVALID_CREDENTIALS(401, "Unauthorized","Invalid credentials"),
     EMAIL_ALREADY_REGISTERED(409, "Conflict","Email is already registered");
 
     private final Integer statusCode;

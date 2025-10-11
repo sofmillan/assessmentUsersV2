@@ -1,6 +1,5 @@
 package co.com.assessment.model.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

@@ -4,13 +4,12 @@ import co.com.assessment.model.AuthenticatedUser;
 import co.com.assessment.model.User;
 import co.com.assessment.model.exception.BusinessErrorMessage;
 import co.com.assessment.model.exception.BusinessException;
+import co.com.assessment.model.exception.SecurityErrorMessage;
+import co.com.assessment.model.exception.SecurityException;
 import co.com.assessment.model.gateway.IdentityProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderAsyncClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
@@ -24,28 +23,23 @@ import java.util.Map;
 @Service
 public class CognitoService implements IdentityProvider {
     private final CognitoIdentityProviderAsyncClient cognitoClient;
-    private final String userPoolId;
+
+    private  final String userPoolId;
     private final String clientId;
-    private final String clientSecret;
+
+    private  final String clientSecret;
 
     public CognitoService(
+            CognitoIdentityProviderAsyncClient cognitoClient,
             @Value("${aws.cognito.userPoolId}") String userPoolId,
             @Value("${aws.cognito.clientId}") String clientId,
-            @Value("${aws.cognito.region}") String region,
-            @Value("${aws.accessKey}") String accessKey,
-            @Value("${aws.secretKey}") String secretKey,
             @Value("${aws.cognito.clientSecret}") String clientSecret) {
 
         this.userPoolId = userPoolId;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.cognitoClient = cognitoClient;
 
-        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
-
-        this.cognitoClient = CognitoIdentityProviderAsyncClient.builder()
-                .region(Region.of(region))
-                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-                .build();
     }
 
     @Override
@@ -63,6 +57,7 @@ public class CognitoService implements IdentityProvider {
                 .build();
 
         return Mono.fromFuture(cognitoClient.initiateAuth(authRequest))
+                .onErrorMap(this::handleCognitoExceptions)
                 .map(authResponse ->{
                     AuthenticationResultType result = authResponse.authenticationResult();
                     return   AuthenticatedUser.builder()
@@ -126,9 +121,9 @@ public class CognitoService implements IdentityProvider {
         if (e instanceof UsernameExistsException) {
             return new BusinessException(BusinessErrorMessage.EMAIL_ALREADY_REGISTERED);
         }else if(e instanceof UserNotFoundException ){
-            return new BusinessException(BusinessErrorMessage.INVALID_CREDENTIALS);
+            return new SecurityException(SecurityErrorMessage.INVALID_CREDENTIALS);
         }else if(e instanceof NotAuthorizedException){
-            return new BusinessException(BusinessErrorMessage.INVALID_CREDENTIALS);
+            return new SecurityException(SecurityErrorMessage.INVALID_CREDENTIALS);
         }
         return e;
     }

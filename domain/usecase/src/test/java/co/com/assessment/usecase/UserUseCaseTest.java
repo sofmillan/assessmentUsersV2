@@ -45,6 +45,7 @@ public class UserUseCaseTest {
                 .assertNext(createdUser ->{
                     assertNotNull(createdUser);
                     assertNotNull(createdUser.getId());
+                    assertNotNull(createdUser.getRole());
                     assertEquals(baseUser.getEmail(), createdUser.getEmail());
                 }).verifyComplete();
 
@@ -53,7 +54,7 @@ public class UserUseCaseTest {
     }
 
     @Test
-    void shoudlAuthenticateUserSuccessfully(){
+    void shouldAuthenticateUserSuccessfully(){
         User userLogin = User.builder()
                 .email("noah@gmail.com")
                 .password("Specter123")

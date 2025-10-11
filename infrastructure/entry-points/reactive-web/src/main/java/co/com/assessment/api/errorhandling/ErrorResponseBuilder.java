@@ -19,7 +19,7 @@ public class ErrorResponseBuilder {
     private record ErrorMetadata(String title, Integer code, String detail){}
     private record ErrorContext(ServerRequest serverRequest, Throwable throwable){}
     public Mono<ErrorModel> buildErrorResponse(BusinessException ex, ServerRequest request){
-        var metadata = new ErrorMetadata(ex.getBusinessErrorMessage().getTitle(),
+        var metadata = new ErrorMetadata(ex.getBusinessErrorMessage().getStatus(),
                 ex.getBusinessErrorMessage().getStatusCode(),
                 ex.getBusinessErrorMessage().getMessage());
         var context = new ErrorContext(request, ex);

@@ -16,6 +16,8 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Map;
 
@@ -47,7 +49,7 @@ public class CognitoService implements IdentityProvider {
     }
 
     @Override
-    public Mono<AuthenticatedUser> loginUser(User user) {
+    public Mono<AuthenticatedUser> authenticateUser(User user) {
         String secretHash = calculateSecretHash(clientId, clientSecret, user.getEmail());
 
         InitiateAuthRequest authRequest = InitiateAuthRequest.builder()
@@ -63,10 +65,12 @@ public class CognitoService implements IdentityProvider {
         return Mono.fromFuture(cognitoClient.initiateAuth(authRequest))
                 .map(authResponse ->{
                     AuthenticationResultType result = authResponse.authenticationResult();
-                    return   new AuthenticatedUser(result.accessToken(),
-                            result.refreshToken(),
-                            result.expiresIn(),
-                            result.tokenType());
+                    return   AuthenticatedUser.builder()
+                            .accessToken(result.accessToken())
+                            .refreshToken(result.refreshToken())
+                            .expiresIn(result.expiresIn())
+                            .type(result.tokenType())
+                            .build();
                 });
     }
 
@@ -88,27 +92,26 @@ public class CognitoService implements IdentityProvider {
         Mono<AdminCreateUserResponse> registrationResult = Mono.fromFuture(cognitoClient.adminCreateUser(signUpRequest));
 
 
-
         return registrationResult.onErrorMap(this::handleCognitoExceptions)
                 .flatMap(response ->
-                        Mono.zip(addtogroup(user.getEmail(), user.getRole()),
-                                setPass(user.getEmail(), user.getPassword()))
+                        Mono.zip(addUserToGroup(user.getEmail(), user.getRole()),
+                                setPermanentPassword(user.getEmail(), user.getPassword()))
                                 .thenReturn(response.user().username()));
 
     }
 
-    private Mono<Void> setPass(String email, String pass){
+    private Mono<Void> setPermanentPassword(String email, String password){
         AdminSetUserPasswordRequest setPasswordRequest = AdminSetUserPasswordRequest.builder()
                 .userPoolId(userPoolId)
                 .username(email)
-                .password(pass)
+                .password(password)
                 .permanent(true)
                 .build();
 
         return Mono.fromFuture(cognitoClient.adminSetUserPassword(setPasswordRequest)).then();
     }
 
-    private Mono<Void> addtogroup(String email, String role){
+    private Mono<Void> addUserToGroup(String email, String role){
         AdminAddUserToGroupRequest addUserToGroupRequest = AdminAddUserToGroupRequest.builder()
                 .userPoolId(userPoolId)
                 .username(email)
@@ -136,7 +139,7 @@ public class CognitoService implements IdentityProvider {
             mac.init(new SecretKeySpec(clientSecret.getBytes(), "HmacSHA256"));
             byte[] hash = mac.doFinal(message.getBytes());
             return Base64.getEncoder().encodeToString(hash);
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException("Error calculating secret hash", e);
         }
     }

@@ -5,6 +5,6 @@ import co.com.assessment.model.User;
 import reactor.core.publisher.Mono;
 
 public interface IdentityProvider {
-    Mono<AuthenticatedUser> loginUser(User user);
+    Mono<AuthenticatedUser> authenticateUser(User user);
     Mono<String> registerUser(User user);
 }

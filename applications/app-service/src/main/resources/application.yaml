@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 spring:
   application:
     name: "UsersProject"
@@ -22,9 +22,10 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
-aws:
+
   dynamodb:
-    endpoint: "http://localhost:8000"
+    tableName: Users
+    region: us-east-1
 adapter:
   cognito:
     secret: "<cognito-credentials-secret-name>"

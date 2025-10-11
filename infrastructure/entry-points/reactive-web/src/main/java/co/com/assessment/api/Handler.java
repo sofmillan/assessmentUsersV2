@@ -28,7 +28,7 @@ public class Handler {
                 .switchIfEmpty(Mono.error(()-> new BusinessException(BusinessErrorMessage.INVALID_REQUEST)))
                 .doOnNext(objectValidator::validate)
                 .map(dto -> objectMapper.map(dto, User.class))
-                .flatMap(model-> userUseCase.registerUser(Mono.just(model)))
+                .flatMap(userUseCase::registerUser)
                 .map(user -> objectMapper.map(user, UserSignupRsDto.class))
                 .flatMap(this::buildResponse);
     }
@@ -38,11 +38,11 @@ public class Handler {
                 .switchIfEmpty(Mono.error(()-> new BusinessException(BusinessErrorMessage.INVALID_REQUEST)))
                 .doOnNext(objectValidator::validate)
                 .map(dto -> objectMapper.map(dto, User.class))
-                .flatMap(model -> userUseCase.login(Mono.just(model)))
+                .flatMap(userUseCase::authenticateUser)
                 .map(model -> objectMapper.map(model, UserSigninRsDto.class))
                 .flatMap(this::buildResponse);
-
     }
+
     private Mono<ServerResponse> buildResponse(Object userSignupRqDto){
         return ServerResponse.ok().bodyValue(userSignupRqDto);
     }

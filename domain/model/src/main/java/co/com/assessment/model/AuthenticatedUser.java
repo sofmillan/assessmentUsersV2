@@ -1,10 +1,12 @@
 package co.com.assessment.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class AuthenticatedUser {
     private String accessToken;
     private String refreshToken;

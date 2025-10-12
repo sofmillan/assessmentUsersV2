@@ -1,5 +1,4 @@
 package co.com.assessment.metrics.aws;
-
 import io.micrometer.core.instrument.logging.LoggingMeterRegistry;
 import io.micrometer.core.instrument.logging.LoggingRegistryConfig;
 import org.junit.jupiter.api.Test;

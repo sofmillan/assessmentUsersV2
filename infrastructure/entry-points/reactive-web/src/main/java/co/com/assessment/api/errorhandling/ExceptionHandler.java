@@ -50,6 +50,6 @@ public class ExceptionHandler extends AbstractErrorWebExceptionHandler {
                 .onErrorResume(ObjectValidationException.class, ex->
                         errorResponseBuilder.buildErrorResponse(ex, serverRequest))
                 .cast(ErrorModel.class)
-                .flatMap(errorResponseBuilder::buildfinalResponse);
+                .flatMap(errorResponseBuilder::buildFinalResponse);
     }
 }

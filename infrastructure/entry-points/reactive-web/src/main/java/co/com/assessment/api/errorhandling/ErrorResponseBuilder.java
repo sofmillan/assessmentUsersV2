@@ -61,7 +61,7 @@ public class ErrorResponseBuilder {
         return Mono.just(response);
     }
 
-    public Mono<ServerResponse> buildfinalResponse(ErrorModel errorModel){
+    public Mono<ServerResponse> buildFinalResponse(ErrorModel errorModel){
         HttpStatus status = Optional.ofNullable(HttpStatus.resolve(errorModel.getStatusCode())).orElse(HttpStatus.BAD_REQUEST);
 
         return ServerResponse.status(status)

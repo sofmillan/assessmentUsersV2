@@ -17,14 +17,10 @@ import java.time.LocalDateTime;
 @DynamoDbBean
 @Builder(toBuilder=true)
 public class UserEntity {
-
     private String id;
-
     private String email;
-
     private String firstName;
     private String lastName;
-
     private LocalDateTime createdAt;
 
     @DynamoDbPartitionKey
@@ -44,25 +40,10 @@ public class UserEntity {
         return createdAt;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
     @DynamoDbAttribute("FirstName")
 
     public String getFirstName() {
         return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
     }
 
     @DynamoDbAttribute("LastName")
@@ -71,7 +52,4 @@ public class UserEntity {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 }

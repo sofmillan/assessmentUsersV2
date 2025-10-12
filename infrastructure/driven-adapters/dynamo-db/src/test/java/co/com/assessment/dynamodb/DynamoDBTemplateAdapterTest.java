@@ -1,7 +1,5 @@
-package co.com.assessment.dynamodb.helper;
+package co.com.assessment.dynamodb;
 
-import co.com.assessment.dynamodb.DynamoDBTemplateAdapter;
-import co.com.assessment.dynamodb.UserEntity;
 import co.com.assessment.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.concurrent.CompletableFuture;
 
 @ExtendWith(MockitoExtension.class)
-class TemplateAdapterOperationsTest {
+class DynamoDBTemplateAdapterTest {
 
     @Mock
     private DynamoDbEnhancedAsyncClient dynamoDbEnhancedAsyncClient;
@@ -56,7 +54,7 @@ class TemplateAdapterOperationsTest {
         when(mapper.map(model, UserEntity.class)).thenReturn(userEntity);
 
 
-        dynamoDBTemplateAdapter.save(model)
+        dynamoDBTemplateAdapter.saveUser(model)
                         .as(StepVerifier::create)
                                 .assertNext(savedUser ->{
                                     assertNotNull(savedUser);

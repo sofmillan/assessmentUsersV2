@@ -15,11 +15,6 @@ import java.time.LocalDateTime;
 public class DynamoDBTemplateAdapter extends TemplateAdapterOperations<User, String, UserEntity> implements UserPersistenceGateway {
 
     public DynamoDBTemplateAdapter(DynamoDbEnhancedAsyncClient connectionFactory, ObjectMapper mapper) {
-        /**because you are not subscribing to the Mono<User> returned by the registerUser method
-         *  Could be use mapper.mapBuilder if your domain model implement builder pattern
-         *  super(repository, mapper, d -> mapper.mapBuilder(d,ObjectModel.ObjectModelBuilder.class).build());
-         *  Or using mapper.map with the class of the object model
-         */
         super(connectionFactory, mapper, d -> mapper.map(d, User.class), "Users");
     }
 

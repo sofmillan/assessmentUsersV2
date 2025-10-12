@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class ObjectValidator {
@@ -22,7 +21,7 @@ public class ObjectValidator {
         if (!violations.isEmpty()) {
             List<String> messages = violations.stream()
                     .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toList());
+                    .toList();
             throw new ObjectValidationException(messages);
         }
     }

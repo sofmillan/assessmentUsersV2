@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 
 
 @Repository
-public class DynamoDBTemplateAdapter extends TemplateAdapterOperations<User, String, UserEntity> implements UserPersistenceGateway {
+public class DynamoDBTemplateAdapter extends TemplateAdapterOperations<User, UserEntity> implements UserPersistenceGateway {
 
     public DynamoDBTemplateAdapter(DynamoDbEnhancedAsyncClient connectionFactory, ObjectMapper mapper) {
-        super(connectionFactory, mapper, d -> mapper.map(d, User.class), "Users");
+        super(connectionFactory, mapper, "Users");
     }
 
     @Override

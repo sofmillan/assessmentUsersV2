@@ -6,7 +6,7 @@ import co.com.assessment.model.exception.SecurityErrorMessage;
 import co.com.assessment.model.exception.SecurityException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-public class ExceptionTest {
+class ExceptionTest {
     @Test
     void businessExceptionShouldStoreMessage() {
         BusinessException ex = new BusinessException(BusinessErrorMessage.EMAIL_ALREADY_REGISTERED);

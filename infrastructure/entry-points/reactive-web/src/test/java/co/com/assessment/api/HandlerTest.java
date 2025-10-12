@@ -22,7 +22,7 @@ import reactor.test.StepVerifier;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
-public class HandlerTest {
+class HandlerTest {
     @Mock
     private UserUseCase userUseCase;
     @Mock

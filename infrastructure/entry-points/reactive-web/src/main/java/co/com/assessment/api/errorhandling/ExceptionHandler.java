@@ -2,6 +2,7 @@ package co.com.assessment.api.errorhandling;
 
 import co.com.assessment.api.validation.ObjectValidationException;
 import co.com.assessment.model.exception.BusinessException;
+import co.com.assessment.model.exception.SecurityException;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
@@ -42,6 +43,8 @@ public class ExceptionHandler extends AbstractErrorWebExceptionHandler {
 
     Mono<ServerResponse> renderErrorResponse(ServerRequest serverRequest){
         return Mono.error(getError(serverRequest))
+                .onErrorResume(SecurityException.class, ex ->
+                        errorResponseBuilder.buildErrorResponse(ex, serverRequest))
                 .onErrorResume(BusinessException.class, ex ->
                         errorResponseBuilder.buildErrorResponse(ex, serverRequest))
                 .onErrorResume(ObjectValidationException.class, ex->

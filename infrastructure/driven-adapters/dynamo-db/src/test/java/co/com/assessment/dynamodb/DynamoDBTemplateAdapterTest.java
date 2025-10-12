@@ -39,7 +39,7 @@ class DynamoDBTemplateAdapterTest {
     }
 
     @Test
-    void testSave() {
+    void shouldSaveUser() {
         User model = User.builder()
                 .id("c1e289dc-80ad-4920-be34-8df240053771")
                 .email("noah@example.com")
@@ -62,5 +62,34 @@ class DynamoDBTemplateAdapterTest {
                                 }).verifyComplete();
 
         verify(customerTable).putItem(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldMapUserEntityToUserModel(){
+        User userModel = User.builder()
+                .id("c1e289dc-80ad-4920-be34-8df240053771")
+                .email("noah@example.com")
+                .password("Specter12")
+                .firstName("Noah")
+                .lastName("Sebastian")
+                .role("ROLE_USER")
+                .build();
+
+        UserEntity userEntity = UserEntity.builder()
+                .id("c1e289dc-80ad-4920-be34-8df240053771")
+                .email("noah@example.com")
+                .firstName("Noah")
+                .lastName("Sebastian")
+                .build();
+
+        when(mapper.map(userModel, UserEntity.class)).thenReturn(userEntity);
+
+        UserEntity savedUser = dynamoDBTemplateAdapter.toEntity(userModel);
+
+        assertEquals(userModel.getId(), savedUser.getId());
+        assertEquals(userModel.getEmail(), savedUser.getEmail());
+        assertEquals(userModel.getFirstName(), savedUser.getFirstName());
+        assertEquals(userModel.getLastName(), savedUser.getLastName());
+        assertNotNull(savedUser.getCreatedAt());
     }
 }

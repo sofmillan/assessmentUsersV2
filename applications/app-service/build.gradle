@@ -4,7 +4,6 @@ dependencies {
 	implementation project(':cognito-token-provider')
 	implementation 'org.reactivecommons.utils:object-mapper:0.1.0'
 	implementation project(':dynamo-db')
-	implementation project(':metrics')
 	implementation project(':reactive-web')
     implementation project(':model')
     implementation project(':usecase')

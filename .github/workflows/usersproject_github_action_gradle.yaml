@@ -83,7 +83,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         run: |
-          docker build -t ${{env.ECR_REPOSITORY_LINK}}/users:1.0.0 .
-          docker push ${{ env.ECR_REPOSITORY_LINK }}/users:1.0.0
-          echo "image=${{ env.ECR_REPOSITORY_LINK }}/users:1.0.0" >> $GITHUB_OUTPUT
+          docker build -t ${{env.ECR_REPOSITORY_LINK}}:1.0.0 .
+          docker push ${{ env.ECR_REPOSITORY_LINK }}:1.0.0
+          echo "image=${{ env.ECR_REPOSITORY_LINK }}:1.0.0" >> $GITHUB_OUTPUT
 

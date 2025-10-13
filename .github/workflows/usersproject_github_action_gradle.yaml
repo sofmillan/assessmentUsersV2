@@ -6,8 +6,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 env:
-  ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
-  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+  SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
   USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
   CLIENT_ID: ${{ secrets.CLIENT_ID }}
   REGION: ${{ secrets.REGION }}

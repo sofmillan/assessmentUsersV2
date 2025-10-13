@@ -47,6 +47,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew build sonar --info
+      - name: Stage Artifact Files
+        run: |
+          mkdir -p artifact-staging
+          cp build/libs/UsersProject.jar artifact-staging/
+          cp deployment/Dockerfile artifact-staging/
       - name: Upload files
         uses: actions/upload-artifact@v4
         with:

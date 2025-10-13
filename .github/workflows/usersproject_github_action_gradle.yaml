@@ -56,9 +56,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Package
-          path: |
-            build/libs/UsersProject.jar
-            deployment/Dockerfile
+          path: artifact-staging/
 
   deploy:
     name: Deploy

@@ -23,9 +23,17 @@ management:
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
 aws:
+  accessKey: ${AWS_ACCESS_KEY}
+  secretKey:  ${AWS_SECRET_KEY}
+  region: ${REGION}
+  cognito:
+    userPoolId: ${USER_POOL_ID}
+    clientId:  ${CLIENT_ID}
+    region: ${REGION}
+    clientSecret: ${CLIENT_SECRET}
   dynamodb:
     tableName: Users
-    region: us-east-1
+    region: ${REGION}
 adapter:
   cognito:
     secret: "<cognito-credentials-secret-name>"

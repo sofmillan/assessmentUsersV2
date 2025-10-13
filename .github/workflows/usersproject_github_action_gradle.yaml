@@ -5,6 +5,15 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+env:
+  ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
+  CLIENT_ID: ${{ secrets.CLIENT_ID }}
+  REGION: ${{ secrets.REGION }}
+  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+  ECR_REPOSITORY_LINK: ${{ secrets.ECR_REPOSITORY_LINK }}
+
 jobs:
   build:
     name: Build and analyze
@@ -38,3 +47,37 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew build sonar --info
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: Package
+          path: build/libs
+      - name: Upload dockerfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: Package
+          path: deployment
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
+        with:
+          aws-access-key-id: ${{ env.ACCESS_KEY }}
+          aws-secret-access-key: ${{ env.SECRET_KEY }}
+          aws-region: ${{ env.REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        run: |
+          docker build -t ${{env.ECR_REPOSITORY_LINK}}/users:1.0.0 .
+          docker push ${{ env.ECR_REPOSITORY_LINK }}/users:1.0.0
+          echo "image=${{ env.ECR_REPOSITORY_LINK }}/users:1.0.0" >> $GITHUB_OUTPUT
+

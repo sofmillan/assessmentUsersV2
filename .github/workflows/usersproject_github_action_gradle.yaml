@@ -41,6 +41,8 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Run all tests
+        env:
+          REGION: ${{ secrets.REGION }}
         run: ./gradlew test
       - name: Build and analyze
         env:

@@ -10,7 +10,6 @@ env:
   SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
   USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
   CLIENT_ID: ${{ secrets.CLIENT_ID }}
-  REGION: ${{ secrets.REGION }}
   CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
   ECR_REPOSITORY_LINK: ${{ secrets.ECR_REPOSITORY_LINK }}
 
@@ -46,6 +45,7 @@ jobs:
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          REGION: ${{ secrets.REGION }}
         run: ./gradlew build sonar --info
       - name: Stage Artifact Files
         run: |

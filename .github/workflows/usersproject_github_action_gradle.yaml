@@ -115,8 +115,13 @@ jobs:
   
           echo "Running the new container..."
           docker run -d \
-            --name users_container \
-            -p 8081:8081 \
+              --name users_container
+              -e ACCESS_KEY="$ACCESS_KEY" \
+              -e SECRET_KEY="$SECRET_KEY" \
+              -e USER_POOL_ID="$USER_POOL_ID" \
+              -e CLIENT_ID="$CLIENT_ID" \
+              -e CLIENT_SECRET="$CLIENT_SECRET" \
+              -e REGION="$REGION" \
             $IMAGE_URI
   
           echo "Deployment complete."        

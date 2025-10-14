@@ -12,7 +12,7 @@ env:
   CLIENT_ID: ${{ secrets.CLIENT_ID }}
   CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
   ECR_REPOSITORY_LINK: ${{ secrets.ECR_REPOSITORY_LINK }}
-
+  REGION: ${{ secrets.REGION }}
 jobs:
   build:
     name: Build and analyze

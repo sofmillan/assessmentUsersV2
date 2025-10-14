@@ -115,7 +115,7 @@ jobs:
   
           echo "Running the new container..."
           docker run -d \
-              --name users_container
+              --name users_container \
               -e ACCESS_KEY="$ACCESS_KEY" \
               -e SECRET_KEY="$SECRET_KEY" \
               -e USER_POOL_ID="$USER_POOL_ID" \

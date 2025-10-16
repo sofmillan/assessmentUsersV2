@@ -16,8 +16,8 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class RouterRest {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(POST("/user/signup"), handler::listenPOSTUserSignup)
-                .andRoute(POST("/user/signin"), handler::listenPOSTUserSignin)
+        return route(POST("/users/signup"), handler::listenPOSTUserSignup)
+                .andRoute(POST("/users/signin"), handler::listenPOSTUserSignin)
                 .andRoute(RequestPredicates.all(), request ->{
                     throw new MethodNotAllowedException(request.method(), List.of());
                 });
